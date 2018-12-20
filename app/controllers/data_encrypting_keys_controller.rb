@@ -1,13 +1,12 @@
 class DataEncryptingKeysController < ApplicationController
-  def rotate_status
+  MESSAGE_LOOKUP = {
+      RotateKeyWorkerStatus::AVAILABLE => 'No key rotation queued or in progress',
+      RotateKeyWorkerStatus::QUEUED => 'Key rotation has been queued',
+      RotateKeyWorkerStatus::IN_PROGRESS => 'Key rotation is in progress',
+  }.freeze
 
-    if Sidekiq::Queue.new.size > 0
-      message = 'Key rotation has been queued'
-    elsif key_rotation_job_in_progress?
-      message = 'Key rotation is in progress'
-    else
-      message = 'No key rotation queued or in progress'
-    end
+  def rotate_status
+    message = MESSAGE_LOOKUP[RotateKeyWorkerStatus.status]
 
     render json: {message: message}.to_json
   end
