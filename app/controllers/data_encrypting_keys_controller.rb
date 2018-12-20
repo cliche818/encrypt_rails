@@ -1,6 +1,4 @@
-require 'pry'
-
-class DataEncryptedKeysController < ApplicationController
+class DataEncryptingKeysController < ApplicationController
   def rotate_status
 
     if Sidekiq::Queue.new.size > 0
@@ -12,6 +10,10 @@ class DataEncryptedKeysController < ApplicationController
     end
 
     render json: {message: message}.to_json
+  end
+
+  def rotate
+    render :nothing
   end
 
   private

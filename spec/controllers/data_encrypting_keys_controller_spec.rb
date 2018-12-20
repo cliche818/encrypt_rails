@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe DataEncryptedKeysController, type: :controller do
+describe DataEncryptingKeysController, type: :controller do
   describe '#rotate_status' do
     it 'should return a json response for no rotation job in queue or in progress' do
       sidekiq_worker_object = []
