@@ -3,6 +3,9 @@ Rails.application.routes.draw do
 
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
+
+  get '/data_encrypting_keys/rotate/status', to: 'data_encrypted_keys#rotate_status'
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
