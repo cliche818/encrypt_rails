@@ -12,7 +12,15 @@ class DataEncryptingKeysController < ApplicationController
   end
 
   def rotate
-    render :nothing
+    status = RotateKeyWorkerStatus.status
+    message = MESSAGE_LOOKUP[status]
+
+    if status == RotateKeyWorkerStatus::AVAILABLE
+      RotateKeyWorker.perform_async
+      render json: {message: message}.to_json
+    elsif status == RotateKeyWorkerStatus::IN_PROGRESS || status == RotateKeyWorkerStatus::QUEUED
+      render json: {message: message}.to_json, status: :service_unavailable
+    end
   end
 
   private

@@ -31,6 +31,31 @@ describe DataEncryptingKeysController, type: :controller do
   end
 
   describe '#rotate' do
+    it 'should launch the rotate key worker if the status is available' do
+      allow(RotateKeyWorkerStatus).to receive(:status).and_return(RotateKeyWorkerStatus::AVAILABLE)
 
+      expect(RotateKeyWorker).to receive(:perform_async)
+      post :rotate
+
+      expect(response.code).to eq('200')
+    end
+
+    it 'should not launch the rotate key worker if the status is in progress' do
+      allow(RotateKeyWorkerStatus).to receive(:status).and_return(RotateKeyWorkerStatus::IN_PROGRESS)
+
+      expect(RotateKeyWorker).to_not receive(:perform_async)
+      post :rotate
+
+      expect(response.code).to eq('503')
+    end
+
+    it 'should not launch the rotate key worker if the status is in progress' do
+      allow(RotateKeyWorkerStatus).to receive(:status).and_return(RotateKeyWorkerStatus::QUEUED)
+
+      expect(RotateKeyWorker).to_not receive(:perform_async)
+      post :rotate
+
+      expect(response.code).to eq('503')
+    end
   end
 end
