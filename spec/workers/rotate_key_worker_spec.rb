@@ -28,5 +28,12 @@ describe RotateKeyWorker do
       expect(updated_record_two.value).to eq('two')
       expect(updated_record_two.encrypted_value).to_not eq(old_record_two_encrypted_value)
     end
+
+    it 'should generate a data encrypting key if there is no encrypted keys' do
+      RotateKeyWorker.new.perform
+      expect(DataEncryptingKey.count).to eq(1)
+      expect(DataEncryptingKey.primary).to_not be_nil
+      expect(EncryptedString.count).to eq(0)
+    end
   end
 end
