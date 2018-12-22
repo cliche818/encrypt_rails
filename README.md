@@ -42,4 +42,25 @@ What the background job(s) should do
 * Add an integration test that loads a large number (1K+) of encrypted strings in to the database, queues a rotation job and then polls it until the job is complete
 
 
+#### Jeff Notes
+How to run (in terminal):
+1) bundle install
+2) rspec [ to run unit tests]
+3) rspec integration [ to run integration test]
+4) rails s [ to start local rails server, visit localhost:3000/sidekiq for sidekiq dashboard ]
+5) sidekiq [ to start sidekiq so background jobs start being executed ]
+
+Some explanations:
+RotateKeyWorkerStatus - responsible for returning the status of the rotate key worker (job queued, job in progress, no job runnning/queued)
+RotateKeyWorker - sidekiq job to generate the new data encrypting key and reencrypt all existing strings
+
+Gem additions:
+rspec / rspec-rails, more experienced to using this testing framework
+guard-rspec, used in conjunction with rspec to only run tests to files I have changed
+sidekiq-limit_fetch, provides the ability to limit the number of workers working on a queue (used to limit rotate key job to 1 worker)
+capybara, for running integration tests
+database_cleaner, for wiping the database before each integration test
+selenium-webdriver, for running integration tests
+
+
 
