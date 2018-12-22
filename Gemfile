@@ -58,7 +58,6 @@ group :integration do
   gem 'capybara'
   gem 'database_cleaner'
   gem 'selenium-webdriver'
-  gem 'rspec-sidekiq'
 end
 
 gem "attr_encrypted", "~> 3.0.0"
