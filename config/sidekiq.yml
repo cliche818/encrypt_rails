@@ -1,0 +1,9 @@
+---
+:concurrency: 5
+:limits:
+  rotate_key: 1
+:queues:
+- rotate_key
+- critical
+- default
+- low
