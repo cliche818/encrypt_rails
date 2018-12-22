@@ -23,17 +23,4 @@ class DataEncryptingKeysController < ApplicationController
       render json: {message: 'Rotate key job cannot be enqueued'}.to_json, status: :service_unavailable
     end
   end
-
-  private
-
-  def key_rotation_job_in_progress?
-    workers = Sidekiq::Workers.new
-
-    result = false
-    workers.each do |_process_id, _thread_id, work|
-      result = true if work['payload']['queue'].present?
-    end
-
-    result
-  end
 end
