@@ -1,4 +1,6 @@
 class DataEncryptingKeysController < ApplicationController
+  protect_from_forgery unless: -> { request.format.json? } #only so I can use postman to test the rotate post request
+
   MESSAGE_LOOKUP = {
       RotateKeyWorkerStatus::AVAILABLE => 'No key rotation queued or in progress',
       RotateKeyWorkerStatus::QUEUED => 'Key rotation has been queued',
@@ -13,13 +15,12 @@ class DataEncryptingKeysController < ApplicationController
 
   def rotate
     status = RotateKeyWorkerStatus.status
-    message = MESSAGE_LOOKUP[status]
 
     if status == RotateKeyWorkerStatus::AVAILABLE
       RotateKeyWorker.perform_async
-      render json: {message: message}.to_json
+      render json: {message: 'Rotate key job is enqueued'}.to_json
     elsif status == RotateKeyWorkerStatus::IN_PROGRESS || status == RotateKeyWorkerStatus::QUEUED
-      render json: {message: message}.to_json, status: :service_unavailable
+      render json: {message: 'Rotate key job cannot be enqueued'}.to_json, status: :service_unavailable
     end
   end
 

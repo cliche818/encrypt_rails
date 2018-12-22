@@ -7,7 +7,7 @@ describe RotateKeyWorkerStatus do
       allow(Sidekiq::Workers).to receive(:new).and_return(sidekiq_worker_object)
 
       sidekiq_queue_object = []
-      allow(Sidekiq::Queue).to receive(:new).and_return(sidekiq_queue_object)
+      allow(Sidekiq::Queue).to receive(:new).with(:rotate_key).and_return(sidekiq_queue_object)
 
       expect(RotateKeyWorkerStatus.status).to eq(:available)
     end
@@ -17,7 +17,7 @@ describe RotateKeyWorkerStatus do
       allow(Sidekiq::Workers).to receive(:new).and_return(sidekiq_worker_object)
 
       sidekiq_queue_object = [OpenStruct.new(klass: 'WorkerClass')]
-      allow(Sidekiq::Queue).to receive(:new).and_return(sidekiq_queue_object)
+      allow(Sidekiq::Queue).to receive(:new).with(:rotate_key).and_return(sidekiq_queue_object)
 
       expect(RotateKeyWorkerStatus.status).to eq(:queued)
     end
@@ -28,7 +28,7 @@ describe RotateKeyWorkerStatus do
       allow(Sidekiq::Workers).to receive(:new).and_return(sidekiq_worker_object)
 
       sidekiq_queue_object = []
-      allow(Sidekiq::Queue).to receive(:new).and_return(sidekiq_queue_object)
+      allow(Sidekiq::Queue).to receive(:new).with(:rotate_key).and_return(sidekiq_queue_object)
 
       expect(RotateKeyWorkerStatus.status).to eq(:in_progress)
     end
