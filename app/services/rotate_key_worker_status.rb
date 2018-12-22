@@ -4,10 +4,10 @@ class RotateKeyWorkerStatus
   AVAILABLE = :available
 
   def self.status
-    if Sidekiq::Queue.new(:rotate_key).size > 0
-      QUEUED
-    elsif key_rotation_job_in_progress?
+    if key_rotation_job_in_progress?
       IN_PROGRESS
+    elsif Sidekiq::Queue.new(:rotate_key).size > 0
+      QUEUED
     else
       AVAILABLE
     end
